@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iris Flower Classification</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    /* Your existing styling goes here */
+  </style>
+</head>
+<body>
+  <div class="formbold-main-wrapper">
+    <div class="formbold-form-wrapper">
+      <form id="iris-form" action="/predict" method="POST">
+        <div class="formbold-input-flex">
+          <div>
+            <label for="sepal_length" class="formbold-form-label">Sepal Length (cm)</label>
+            <input type="number" step="0.01" id="sepal_length" name="sepal_length" class="formbold-form-input" placeholder="Enter Sepal Length" required>
+          </div>
+          <div>
+            <label for="sepal_width" class="formbold-form-label">Sepal Width (cm)</label>
+            <input type="number" step="0.01" id="sepal_width" name="sepal_width" class="formbold-form-input" placeholder="Enter Sepal Width" required>
+          </div>
+        </div>
+        <div class="formbold-input-flex">
+          <div>
+            <label for="petal_length" class="formbold-form-label">Petal Length (cm)</label>
+            <input type="number" step="0.01" id="petal_length" name="petal_length" class="formbold-form-input" placeholder="Enter Petal Length" required>
+          </div>
+          <div>
+            <label for="petal_width" class="formbold-form-label">Petal Width (cm)</label>
+            <input type="number" step="0.01" id="petal_width" name="petal_width" class="formbold-form-input" placeholder="Enter Petal Width" required>
+          </div>
+        </div>
+        <div class="formbold-form-btn-wrapper">
+          <button type="submit" class="formbold-btn">Predict Iris Species</button>
+        </div>
+      </form>
+      <div id="prediction-result" style="display: none;">
+        <p><b>Prediction:</b> <span id="predicted-species"></span></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    const form = document.getElementById('iris-form');
+    const predictionResult = document.getElementById('prediction-result');
+    const predictedSpecies = document.getElementById('predicted-species');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+const response = await fetch('/predict', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(Object.fromEntries(formData))
+});
+      const data = await response.json();
+      const prediction = data.prediction[0];  // Access the first element of the prediction array
+
+      predictedSpecies.textContent = prediction;
+      predictionResult.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
